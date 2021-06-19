@@ -10,21 +10,42 @@ data Animal = Animal {
 }deriving(Show) 
 
 maximus = Animal {
-    coef_intel=10,
+    coef_intel=20,
     especie = "Perro",
-    capacidades = ["sentarse"]
+    capacidades = ["sentarse","comer caca"]
 }
 
+misifu = Animal {
+    coef_intel=99,
+    especie="Gato",
+    capacidades = ["ser maligno","correr","romper cosas"]
+}
+
+toto = Animal {
+    coef_intel = 15,
+    especie = "Perico",
+    capacidades = ["volar","hablar","decir qwrt","decir zxcv"]
+}
 dumbo = Animal {
-    coef_intel=25,
+    coef_intel=35,
     especie= "Elefante",
-    capacidades = ["volar"]
+    capacidades = ["volar","derribar arboles"]
 }
 
 remy = Animal {
     coef_intel=101,
     especie = "Raton",
-    capacidades = ["cocinar"]
+    capacidades = ["cocinar","buen gusto"]
+}
+ratonX = Animal {
+    coef_intel=17,
+    especie="Raton",
+    capacidades=["destruir el mundo","hacer planes desalmados"]
+}
+lola = Animal {
+    coef_intel=32,
+    especie="Vaca",
+    capacidades= ["decir muuu"]
 }
 type Transformacion = Animal ->Animal
 --Punto 2, transformar animales
@@ -45,14 +66,19 @@ superpoderes animal
  |(especie animal)=="Raton" = agregarCapacidad ["hablar"] animal
  |otherwise = animal
 
-type Sustancia = String
+type Sustancia = ((Int->Bool),[String])
+sustanciaX :: Sustancia
+sustanciaX = ((>100),["pensamiento profundo","insomnio"])
 
-sustancia :: Sustancia -> Transformacion
-sustancia sust animal
+condicionSustancia:: (Int->Bool)->Int->Bool
+aplicarSustancia :: Sustancia -> Transformacion
+aplicarSustancia sustanciaX = agregarCapacidad (snd sustanciaX)
+{-sustancia sust animal
  | (sust == "sustanciaX") && ((coef_intel animal)>=100) = agregarCapacidad ["pensamiento profundo","insomnio"] animal
  | (sust== "sustanciaY") && ((coef_intel animal)>=20) = agregarCapacidad ["soñar"] animal
  |otherwise = animal
 
+-}
 --Punto 3, criterios de éxito
 
 agil :: Animal -> Bool
@@ -60,3 +86,13 @@ agil animal = elem "correr" (capacidades animal) && 80<(coef_intel animal)
 
 llegoAlIntelecto :: Int -> Animal -> Bool
 llegoAlIntelecto n animal = n<=(coef_intel animal)
+
+--sonidoRaro :: String -> Bool
+--sonidoRaro sonido = 
+
+--noTancuerdo animal = 2<(length.(filter (sonidoRaro) (capacidades animal)))
+
+--Punto 4, experimentos
+--type Experimento = [Transformaciones]->Animal->Animal
+
+--experimentoExitoso exp animal = 
