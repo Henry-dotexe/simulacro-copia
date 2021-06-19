@@ -36,8 +36,27 @@ inutilizar :: Transformacion
 inutilizar animal = animal {
     capacidades=[]
 }
+agregarCapacidad :: [String] -> Transformacion
+agregarCapacidad nuevaCapacidad animal = animal{ capacidades = (capacidades animal)++nuevaCapacidad}
+
 superpoderes :: Transformacion
 superpoderes animal 
- |(especie animal)=="Elefante" = animal { capacidades = (capacidades animal)++["sin miedo a los ratones"]}
- |(especie animal)=="Raton" = animal { capacidades = (capacidades animal)++["hablar"]}
+ |(especie animal)=="Elefante" = agregarCapacidad ["no tenerle miedo a los ratones"] animal
+ |(especie animal)=="Raton" = agregarCapacidad ["hablar"] animal
  |otherwise = animal
+
+type Sustancia = String
+
+sustancia :: Sustancia -> Transformacion
+sustancia sust animal
+ | (sust == "sustanciaX") && ((coef_intel animal)>=100) = agregarCapacidad ["pensamiento profundo","insomnio"] animal
+ | (sust== "sustanciaY") && ((coef_intel animal)>=20) = agregarCapacidad ["soñar"] animal
+ |otherwise = animal
+
+--Punto 3, criterios de éxito
+
+agil :: Animal -> Bool
+agil animal = elem "correr" (capacidades animal) && 80<(coef_intel animal)
+
+llegoAlIntelecto :: Int -> Animal -> Bool
+llegoAlIntelecto n animal = n<=(coef_intel animal)
