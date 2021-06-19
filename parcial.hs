@@ -47,6 +47,11 @@ lola = Animal {
     especie="Vaca",
     capacidades= ["decir muuu"]
 }
+tantor = Animal {
+    coef_intel=26,
+    especie="Elefante",
+    capacidades = []
+}
 type Transformacion = Animal ->Animal
 --Punto 2, transformar animales
 inteligenciaSuperior :: Int->Transformacion
@@ -96,3 +101,8 @@ llegoAlIntelecto n animal = n<=(coef_intel animal)
 --type Experimento = [Transformaciones]->Animal->Animal
 
 --experimentoExitoso exp animal = 
+hacerExperimento :: [Transformacion]->Animal->Animal
+hacerExperimento [transformaciones] animal= (foldl1 (.) [transformaciones]) animal
+
+listaTransf :: [Transformacion]
+listaTransf = [inutilizar,(inteligenciaSuperior 20)]
