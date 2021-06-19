@@ -23,7 +23,7 @@ dumbo = Animal {
 
 remy = Animal {
     coef_intel=101,
-    especie = "Ratón",
+    especie = "Raton",
     capacidades = ["cocinar"]
 }
 type Transformacion = Animal ->Animal
@@ -32,3 +32,12 @@ inteligenciaSuperior :: Int->Transformacion
 inteligenciaSuperior n animal = animal{
     coef_intel= coef_intel animal + n
 } 
+inutilizar :: Transformacion
+inutilizar animal = animal {
+    capacidades=[]
+}
+superpoderes :: Transformacion
+superpoderes animal 
+ |(especie animal)=="Elefante" = animal { capacidades = (capacidades animal)++["sin miedo a los ratones"]}
+ |(especie animal)=="Raton" = animal { capacidades = (capacidades animal)++["hablar"]}
+ |otherwise = animal
