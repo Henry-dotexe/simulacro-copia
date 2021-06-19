@@ -69,16 +69,16 @@ superpoderes animal
 type Sustancia = ((Int->Bool),[String])
 sustanciaX :: Sustancia
 sustanciaX = ((>100),["pensamiento profundo","insomnio"])
+sustanciaY ::Sustancia
+sustanciaY = ((>20),["soñar"])
 
-condicionSustancia:: (Int->Bool)->Int->Bool
 aplicarSustancia :: Sustancia -> Transformacion
-aplicarSustancia sustanciaX = agregarCapacidad (snd sustanciaX)
-{-sustancia sust animal
- | (sust == "sustanciaX") && ((coef_intel animal)>=100) = agregarCapacidad ["pensamiento profundo","insomnio"] animal
- | (sust== "sustanciaY") && ((coef_intel animal)>=20) = agregarCapacidad ["soñar"] animal
+aplicarSustancia sust animal
+ | (snd sust == snd sustanciaX) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
+ | (snd sust== snd sustanciaY) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
  |otherwise = animal
 
--}
+
 --Punto 3, criterios de éxito
 
 agil :: Animal -> Bool
