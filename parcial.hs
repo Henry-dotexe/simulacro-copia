@@ -76,11 +76,14 @@ sustanciaX :: Sustancia
 sustanciaX = ((>100),["pensamiento profundo","insomnio"])
 sustanciaY ::Sustancia
 sustanciaY = ((>20),["soñar"])
+sustanciaW :: Sustancia
+sustanciaW = ((>20),["decir grrr"])
 
 aplicarSustancia :: Sustancia -> Transformacion
 aplicarSustancia sust animal
  | (snd sust == snd sustanciaX) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
  | (snd sust== snd sustanciaY) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
+ |(snd sust== snd sustanciaW) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
  |otherwise = animal
 
 
@@ -98,11 +101,16 @@ llegoAlIntelecto n animal = n<=(coef_intel animal)
 --noTancuerdo animal = 2<(length.(filter (sonidoRaro) (capacidades animal)))
 
 --Punto 4, experimentos
---type Experimento = [Transformaciones]->Animal->Animal
+type Experimento = [Transformacion]
 
---experimentoExitoso exp animal = 
-hacerExperimento :: [Transformacion]->Animal->Animal
-hacerExperimento [transformaciones] animal= (foldl1 (.) [transformaciones]) animal
+hacerExperimento :: Experimento->Animal->Animal
+hacerExperimento experim = foldl1 (.) experim
 
-listaTransf :: [Transformacion]
-listaTransf = [inutilizar,(inteligenciaSuperior 20)]
+exp1 :: Experimento
+exp1 = [superpoderes,(inteligenciaSuperior 10),inutilizar]
+
+exp2 :: Experimento
+exp2 = [aplicarSustancia sustanciaW,superpoderes]
+
+exp3 :: Experimento
+exp3 = [superpoderes]
