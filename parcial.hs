@@ -95,22 +95,44 @@ agil animal = elem "correr" (capacidades animal) && 80<(coef_intel animal)
 llegoAlIntelecto :: Int -> Animal -> Bool
 llegoAlIntelecto n animal = n<=(coef_intel animal)
 
---sonidoRaro :: String -> Bool
---sonidoRaro sonido = 
+noTanCuerdo :: Animal -> Bool
+noTanCuerdo animal = ((>=2).length.(filter (==True)).(map sonidoRaro).capacidades) animal
+--Funciones auxiliares pto 3
+empiezaConDecir :: String->Bool
+empiezaConDecir = (=="decir ").(take 6)
 
---noTancuerdo animal = 2<(length.(filter (sonidoRaro) (capacidades animal)))
+sinConsonantes :: String->Bool
+sinConsonantes palabra = (not.(any (==True)).(map ($palabra))) [elem 'a',elem 'e',elem 'i',elem 'o',elem 'u']
+
+segundaPalabra :: String -> String
+segundaPalabra = drop 6
+
+sonidoRaro :: String -> Bool
+sonidoRaro sonido = (empiezaConDecir sonido) && ((sinConsonantes.segundaPalabra) sonido)
 
 --Punto 4, experimentos
-type Experimento = [Transformacion]
+--type Experimento = [Transformacion]
+data Experimento = Experimento {
+    transformaciones:: [Transformacion],
+    criterio :: (Animal->Bool)
+}
 
 hacerExperimento :: Experimento->Animal->Animal
-hacerExperimento experim = foldl1 (.) experim
+hacerExperimento experim = foldl1 (.) (transformaciones experim)
 
-exp1 :: Experimento
-exp1 = [superpoderes,(inteligenciaSuperior 10),inutilizar]
 
-exp2 :: Experimento
-exp2 = [aplicarSustancia sustanciaW,superpoderes]
+exp1 = Experimento{
+    transformaciones = [superpoderes,(inteligenciaSuperior 10),inutilizar],
+    criterio = ((>=32).coef_intel)
+}
 
-exp3 :: Experimento
-exp3 = [superpoderes]
+exp2 = Experimento{
+    transformaciones = [aplicarSustancia sustanciaW,superpoderes],
+    criterio = noTanCuerdo 
+}
+
+exp3 = Experimento{
+    transformaciones = [superpoderes],
+    criterio = ((elem "no tenerle miedo a los ratones").capacidades)
+}
+
