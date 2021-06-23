@@ -138,24 +138,22 @@ experimentoExitoso experim = ((criterio experim).(hacerExperimento experim))
 hacerExperimentoMulti :: [Transformacion]->[Animal]->[Animal]
 hacerExperimentoMulti experimento = map (foldl1 (.) experimento)
 
-informe1 :: [String]->[Transformacion]->[Animal]->[Int]
-informe1 listaCapacidades experimento = (map coef_intel).(tienenAlgunaCapacidad listaCapacidades).(hacerExperimentoMulti experimento)
+tieneCapacidad :: [String]->([String]->Bool)->[Animal]->[Animal]
+tieneCapacidad listaCapacidades crit = filter (crit.(intersect listaCapacidades).capacidades)
 
-tienenAlgunaCapacidad :: [String]->[Animal]->[Animal]
-tienenAlgunaCapacidad listaCapacidades = filter ((>0).length.(intersect listaCapacidades).capacidades)
+informe1 :: [String]->[Transformacion]->[Animal]->[Int]
+informe1 listaCapacidades experimento = (map coef_intel).(tieneCapacidad listaCapacidades ((>0).length)).(hacerExperimentoMulti experimento)
 
 informe2 :: [String]->[Transformacion]->[Animal]->[String]
-informe2 listaCapacidades experimento = (map especie).(tienenTodasLasCapacidades listaCapacidades).(hacerExperimentoMulti experimento)
-
-tienenTodasLasCapacidades :: [String]->[Animal]->[Animal]
-tienenTodasLasCapacidades listaCapacidades = filter ((==listaCapacidades).(intersect listaCapacidades).capacidades)
+informe2 listaCapacidades experimento = (map especie).(tieneCapacidad listaCapacidades (==listaCapacidades)).(hacerExperimentoMulti experimento)
 
 informe3 :: [String]->[Transformacion]->[Animal]->[Int]
-informe3 listaCapacidades experimento = (map length).(map capacidades).(tieneNingunaCapacidad listaCapacidades).(hacerExperimentoMulti experimento)
+informe3 listaCapacidades experimento = (map length).(map capacidades).(tieneCapacidad listaCapacidades (==[])).(hacerExperimentoMulti experimento)
 
-tieneNingunaCapacidad :: [String]->[Animal]->[Animal]
-tieneNingunaCapacidad listaCapacidades = filter ((==[]).(intersect listaCapacidades).capacidades)
 
+
+caso1 :: [Int]
+caso1 = informe1 ["hablar","ser el mejor espia","no tenerle miedo a los ratones"] [superpoderes,inteligenciaSuperior 30] [remy,perry,lola]
 --Punto 6
 decirGInfinito :: String
 decirGInfinito = "decir gggg" ++ cycle "g"
