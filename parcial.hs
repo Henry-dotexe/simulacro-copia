@@ -1,3 +1,4 @@
+import Data.List
 {-
 Nombre: Soto, Henry
 Legajo: 177.160-7
@@ -9,18 +10,11 @@ data Animal = Animal {
     capacidades :: [String]
 }deriving(Show) 
 
-maximus = Animal {
-    coef_intel=20,
-    especie = "Perro",
-    capacidades = ["sentarse","comer caca"]
-}
-
 misifu = Animal {
     coef_intel=99,
     especie="Gato",
     capacidades = ["ser maligno","correr","romper cosas"]
 }
-
 toto = Animal {
     coef_intel = 15,
     especie = "Perico",
@@ -31,7 +25,11 @@ dumbo = Animal {
     especie= "Elefante",
     capacidades = ["volar","derribar arboles"]
 }
-
+tantor = Animal {
+    coef_intel=26,
+    especie="Elefante",
+    capacidades = []
+}
 remy = Animal {
     coef_intel=101,
     especie = "Raton",
@@ -47,10 +45,10 @@ lola = Animal {
     especie="Vaca",
     capacidades= ["decir muuu"]
 }
-tantor = Animal {
-    coef_intel=26,
-    especie="Elefante",
-    capacidades = []
+perry = Animal{
+    coef_intel=10,
+    especie="Ornitorrinco",
+    capacidades = ["decir grrr"]
 }
 type Transformacion = Animal ->Animal
 --Punto 2, transformar animales
@@ -69,23 +67,21 @@ superpoderes :: Transformacion
 superpoderes animal 
  |(especie animal)=="Elefante" = agregarCapacidad ["no tenerle miedo a los ratones"] animal
  |(especie animal)=="Raton" = agregarCapacidad ["hablar"] animal
+ |(especie animal)=="Ornitorrinco" = agregarCapacidad ["ser el mejor espia"] animal
  |otherwise = animal
 
 type Sustancia = ((Int->Bool),[String])
+--Sustancias de ejemplo
 sustanciaX :: Sustancia
 sustanciaX = ((>100),["pensamiento profundo","insomnio"])
 sustanciaY ::Sustancia
 sustanciaY = ((>20),["soñar"])
+--Sustancias del ejercicio
 sustanciaW :: Sustancia
 sustanciaW = ((>20),["decir grrr"])
 
 aplicarSustancia :: Sustancia -> Transformacion
-aplicarSustancia sust animal
- | (snd sust == snd sustanciaX) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
- | (snd sust== snd sustanciaY) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
- |(snd sust== snd sustanciaW) && ((fst sust) (coef_intel animal)) = agregarCapacidad (snd sust) animal
- |otherwise = animal
-
+aplicarSustancia sust animal = if (fst sust) (coef_intel animal) then agregarCapacidad (snd sust) animal else animal
 
 --Punto 3, criterios de éxito
 
@@ -101,38 +97,90 @@ noTanCuerdo animal = ((>=2).length.(filter (==True)).(map sonidoRaro).capacidade
 empiezaConDecir :: String->Bool
 empiezaConDecir = (=="decir ").(take 6)
 
-sinConsonantes :: String->Bool
-sinConsonantes palabra = (not.(any (==True)).(map ($palabra))) [elem 'a',elem 'e',elem 'i',elem 'o',elem 'u']
+sinVocales :: String->Bool
+sinVocales palabra = (not.(any (==True)).(map ($palabra))) [elem 'a',elem 'e',elem 'i',elem 'o',elem 'u']
 
 segundaPalabra :: String -> String
 segundaPalabra = drop 6
 
 sonidoRaro :: String -> Bool
-sonidoRaro sonido = (empiezaConDecir sonido) && ((sinConsonantes.segundaPalabra) sonido)
+sonidoRaro sonido = (empiezaConDecir sonido) && ((sinVocales.segundaPalabra) sonido)
 
 --Punto 4, experimentos
---type Experimento = [Transformacion]
+
 data Experimento = Experimento {
     transformaciones:: [Transformacion],
     criterio :: (Animal->Bool)
 }
-
 hacerExperimento :: Experimento->Animal->Animal
 hacerExperimento experim = foldl1 (.) (transformaciones experim)
-
-
 exp1 = Experimento{
     transformaciones = [superpoderes,(inteligenciaSuperior 10),inutilizar],
     criterio = ((>=32).coef_intel)
 }
-
 exp2 = Experimento{
     transformaciones = [aplicarSustancia sustanciaW,superpoderes],
     criterio = noTanCuerdo 
 }
-
 exp3 = Experimento{
     transformaciones = [superpoderes],
-    criterio = ((elem "no tenerle miedo a los ratones").capacidades)
+    criterio = (elem "no tenerle miedo a los ratones").capacidades
 }
+exp4 = Experimento{
+    transformaciones= [superpoderes,inteligenciaSuperior 100],
+    criterio = not.noTanCuerdo
+}
+experimentoExitoso :: Experimento -> Animal -> Bool
+experimentoExitoso experim = ((criterio experim).(hacerExperimento experim))
+
+--Punto 5, informes
+
+hacerExperimentoMulti :: [Transformacion]->[Animal]->[Animal]
+hacerExperimentoMulti experimento = map (foldl1 (.) experimento)
+
+informe1 :: [String]->[Transformacion]->[Animal]->[Int]
+informe1 listaCapacidades experimento = (map coef_intel).(tienenAlgunaCapacidad listaCapacidades).(hacerExperimentoMulti experimento)
+
+tienenAlgunaCapacidad :: [String]->[Animal]->[Animal]
+tienenAlgunaCapacidad listaCapacidades = filter ((>0).length.(intersect listaCapacidades).capacidades)
+
+informe2 :: [String]->[Transformacion]->[Animal]->[String]
+informe2 listaCapacidades experimento = (map especie).(tienenTodasLasCapacidades listaCapacidades).(hacerExperimentoMulti experimento)
+
+tienenTodasLasCapacidades :: [String]->[Animal]->[Animal]
+tienenTodasLasCapacidades listaCapacidades = filter ((==listaCapacidades).(intersect listaCapacidades).capacidades)
+
+informe3 :: [String]->[Transformacion]->[Animal]->[Int]
+informe3 listaCapacidades experimento = (map length).(map capacidades).(tieneNingunaCapacidad listaCapacidades).(hacerExperimentoMulti experimento)
+
+tieneNingunaCapacidad :: [String]->[Animal]->[Animal]
+tieneNingunaCapacidad listaCapacidades = filter ((==[]).(intersect listaCapacidades).capacidades)
+
+--Punto 6
+decirGInfinito :: String
+decirGInfinito = "decir gggg" ++ cycle "g"
+animalInfinito = Animal{
+    coef_intel=30,
+    especie="Desconocido",
+    capacidades=[decirGInfinito]
+}
+
+exp5 = Experimento{
+    transformaciones=[inutilizar,inteligenciaSuperior 10],
+    criterio=((>30).coef_intel)
+}
+
+exp6 = Experimento{
+    transformaciones = [agregarCapacidad ["decir muuu"]],
+    criterio= noTanCuerdo
+}
+--Este caso funciona ya que elimina la capacidad infinita del animal, es básicamente un caso trivial de éxito
+casoExperimentoQueFunciona :: Bool
+casoExperimentoQueFunciona = experimentoExitoso exp5 animalInfinito
+
+--Este caso no funciona ya que noTanCuerdo funciona al operar con la palabra o letras restantes de las capacidades que empiezan con decir
+--Ya que la capacidad del animal infinita, evalua letras hasta el infinito. Se puede solucionar utilizando onomatopeyas de longitud fija, lo que
+--cortaría la evaluación del string.
+casoExperimentoQueNoFunciona :: Bool
+casoExperimentoQueNoFunciona = experimentoExitoso exp6 animalInfinito
 
