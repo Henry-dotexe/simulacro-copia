@@ -9,42 +9,49 @@ data Animal = Animal {
     especie :: String,
     capacidades :: [String]
 }deriving(Show) 
-
+misifu :: Animal
 misifu = Animal {
     coef_intel=99,
     especie="Gato",
     capacidades = ["ser maligno","correr","romper cosas"]
 }
+toto :: Animal
 toto = Animal {
     coef_intel = 15,
     especie = "Perico",
     capacidades = ["volar","hablar","decir qwrt","decir zxcv"]
 }
+dumbo :: Animal
 dumbo = Animal {
     coef_intel=35,
     especie= "Elefante",
     capacidades = ["volar","derribar arboles"]
 }
+tantor :: Animal
 tantor = Animal {
     coef_intel=26,
     especie="Elefante",
     capacidades = []
 }
+remy :: Animal
 remy = Animal {
     coef_intel=101,
     especie = "Raton",
     capacidades = ["cocinar","buen gusto"]
 }
+ratonX :: Animal
 ratonX = Animal {
     coef_intel=17,
     especie="Raton",
     capacidades=["destruir el mundo","hacer planes desalmados"]
 }
+lola :: Animal
 lola = Animal {
     coef_intel=32,
     especie="Vaca",
     capacidades= ["decir muuu"]
 }
+perry :: Animal
 perry = Animal{
     coef_intel=10,
     especie="Ornitorrinco",
@@ -114,18 +121,22 @@ data Experimento = Experimento {
 }
 hacerExperimento :: Experimento->Animal->Animal
 hacerExperimento experim = foldl1 (.) (transformaciones experim)
+exp1 :: Experimento
 exp1 = Experimento{
     transformaciones = [superpoderes,(inteligenciaSuperior 10),inutilizar],
     criterio = ((>=32).coef_intel)
 }
+exp2 :: Experimento
 exp2 = Experimento{
     transformaciones = [aplicarSustancia sustanciaW,superpoderes],
     criterio = noTanCuerdo 
 }
+exp3 :: Experimento
 exp3 = Experimento{
     transformaciones = [superpoderes],
     criterio = (elem "no tenerle miedo a los ratones").capacidades
 }
+exp4 :: Experimento
 exp4 = Experimento{
     transformaciones= [superpoderes,inteligenciaSuperior 100],
     criterio = not.noTanCuerdo
@@ -155,21 +166,24 @@ caso1 = informe1 ["hablar","ser el mejor espia","no tenerle miedo a los ratones"
 --Punto 6
 decirGInfinito :: String
 decirGInfinito = "decir gggg" ++ cycle "g"
+animalInfinito :: Animal
 animalInfinito = Animal{
     coef_intel=30,
     especie="Desconocido",
     capacidades=[decirGInfinito]
 }
-
+exp5 :: Experimento
 exp5 = Experimento{
     transformaciones=[inutilizar,inteligenciaSuperior 10],
     criterio=((>30).coef_intel)
 }
-
+exp6 :: Experimento
 exp6 = Experimento{
     transformaciones = [agregarCapacidad ["decir muuu"]],
     criterio= noTanCuerdo
 }
+
+
 --Este caso no funciona ya que noTanCuerdo funciona al operar con la palabra o letras restantes de las capacidades que empiezan con decir
 --Ya que la capacidad del animal infinita, evalua letras hasta el infinito. Se puede solucionar utilizando onomatopeyas de longitud fija, lo que
 --cortaría la evaluación del string.
