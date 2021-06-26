@@ -172,13 +172,15 @@ exp6 = Experimento{
     transformaciones = [agregarCapacidad ["decir muuu"]],
     criterio= noTanCuerdo
 }
---Este caso funciona ya que elimina la capacidad infinita del animal, es básicamente un caso trivial de éxito
-casoExperimentoQueFunciona :: Bool
-casoExperimentoQueFunciona = experimentoExitoso exp5 animalInfinito
-
 --Este caso no funciona ya que noTanCuerdo funciona al operar con la palabra o letras restantes de las capacidades que empiezan con decir
 --Ya que la capacidad del animal infinita, evalua letras hasta el infinito. Se puede solucionar utilizando onomatopeyas de longitud fija, lo que
 --cortaría la evaluación del string.
 casoExperimentoQueNoFunciona :: Bool
 casoExperimentoQueNoFunciona = experimentoExitoso exp6 animalInfinito
+
+--Este caso funciona ya que elimina la capacidad infinita del animal, es básicamente un caso trivial de éxito
+casoExperimentoQueFunciona :: Bool
+casoExperimentoQueFunciona = experimentoExitoso exp5 animalInfinito
+
+
 
