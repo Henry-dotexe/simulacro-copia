@@ -150,8 +150,6 @@ informe2 listaCapacidades experimento = (map especie).(tieneCapacidad listaCapac
 informe3 :: [String]->[Transformacion]->[Animal]->[Int]
 informe3 listaCapacidades experimento = (map length).(map capacidades).(tieneCapacidad listaCapacidades (==[])).(hacerExperimentoMulti experimento)
 
-
-
 caso1 :: [Int]
 caso1 = informe1 ["hablar","ser el mejor espia","no tenerle miedo a los ratones"] [superpoderes,inteligenciaSuperior 30] [remy,perry,lola]
 --Punto 6
